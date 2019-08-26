@@ -1580,6 +1580,10 @@ PUSH { r4, r5, r6, r7, lr }
 			r_strbuf_appendf (&op->esil, "%s,%s,%d,%c,=[4],",
 				REG (i), ARG (0), R_ABS(i*4), i > 0? '+' : '-');
 		}
+		if ( insn->detail->arm.writeback ){
+			r_strbuf_appendf (&op->esil, "%s,%d,+,%s,=",
+				ARG(0), (i-1)*4, ARG(0) );
+		}
 		break;
 	case ARM_INS_ASR:
 		// suffix 'S' forces conditional flag to be updated
@@ -1610,6 +1614,10 @@ r4,r5,r6,3,sp,[*],12,sp,+=
 			r_strbuf_appendf (&op->esil, "%s%s,%d,+,[4],%s,=",
 				comma, ARG (0), (i - 1) * 4, REG (i));
 			comma = ",";
+		}
+		if ( insn->detail->arm.writeback ){
+			r_strbuf_appendf (&op->esil, ",%s,%d,+,%s,=",
+				ARG(0), (i-1)*4, ARG(0) );
 		}
 		}
 		break;
